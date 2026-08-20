@@ -153,6 +153,7 @@ fn core_pipeline(capability: &LanguageCapability) -> LanguagePipeline {
             SymbolParserOwner::CargoManifest => "manifest",
             SymbolParserOwner::Vue => "vue-structural",
             SymbolParserOwner::PowerShell => "powershell-structural",
+            SymbolParserOwner::QuickScript => "quickscript-structural",
             SymbolParserOwner::Fallback => "fallback",
             SymbolParserOwner::Unavailable => "none",
         }

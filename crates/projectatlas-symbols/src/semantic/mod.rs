@@ -24,7 +24,8 @@ pub(super) fn emits_source_module_keys(graph: &SymbolGraph) -> bool {
     match capability.semantic_provider {
         SemanticProviderOwner::Rust
         | SemanticProviderOwner::EcmaScript
-        | SemanticProviderOwner::Python => return true,
+        | SemanticProviderOwner::Python
+        | SemanticProviderOwner::QuickScript => return true,
         SemanticProviderOwner::Cargo => return false,
         SemanticProviderOwner::Unavailable => {}
     }
@@ -49,7 +50,9 @@ pub(super) fn parse_imports(
         SemanticProviderOwner::Rust => rust::parse_import(import_text),
         SemanticProviderOwner::EcmaScript => ecmascript::parse_import(import_text),
         SemanticProviderOwner::Python => python::parse_import(import_text),
-        SemanticProviderOwner::Cargo | SemanticProviderOwner::Unavailable => Vec::new(),
+        SemanticProviderOwner::Cargo
+        | SemanticProviderOwner::QuickScript
+        | SemanticProviderOwner::Unavailable => Vec::new(),
     }
 }
 
@@ -65,6 +68,10 @@ pub(super) fn is_export_candidate(
         SemanticProviderOwner::Python => python::is_export_candidate(graph, symbol_index),
         SemanticProviderOwner::Cargo => {
             cargo::is_export_candidate(graph.symbols[symbol_index].kind)
+        }
+        SemanticProviderOwner::QuickScript => {
+            graph.symbols[symbol_index].kind == projectatlas_core::symbols::SymbolKind::Function
+                && graph.symbols[symbol_index].exported
         }
         SemanticProviderOwner::Unavailable => false,
     }
@@ -83,7 +90,9 @@ pub(super) fn import_scopes(
             ecmascript::import_scopes(caller_path, reference, configured_source)
         }
         SemanticProviderOwner::Python => python::import_scopes(caller_path, reference),
-        SemanticProviderOwner::Cargo | SemanticProviderOwner::Unavailable => Vec::new(),
+        SemanticProviderOwner::Cargo
+        | SemanticProviderOwner::QuickScript
+        | SemanticProviderOwner::Unavailable => Vec::new(),
     }
 }
 
@@ -94,6 +103,7 @@ pub(super) const fn supports_source_dependencies(provider: SemanticProviderOwner
         SemanticProviderOwner::Rust
             | SemanticProviderOwner::EcmaScript
             | SemanticProviderOwner::Python
+            | SemanticProviderOwner::QuickScript
     )
 }
 

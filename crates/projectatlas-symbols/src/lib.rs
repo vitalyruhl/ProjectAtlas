@@ -100,6 +100,9 @@ fn extract_symbol_graph_checked<E>(
         SymbolParserOwner::PowerShell => {
             return extract_powershell_graph_checked(path, language, parse_content.as_ref(), check);
         }
+        SymbolParserOwner::QuickScript => {
+            return languages::quickscript::extract(path, language, parse_content.as_ref(), check);
+        }
         SymbolParserOwner::Unavailable => {
             check()?;
             return Ok(empty_graph(path, language, ParserKind::Structural));

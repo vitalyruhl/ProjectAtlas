@@ -13,10 +13,10 @@ use std::sync::OnceLock;
 pub const LANGUAGE_CAPABILITY_REGISTRY_VERSION: u32 = 3;
 
 /// Version of the direct and embedded semantic-provider projection.
-pub const SEMANTIC_PROVIDER_CONTRACT_VERSION: u32 = 1;
+pub const SEMANTIC_PROVIDER_CONTRACT_VERSION: u32 = 2;
 
 /// Version of the accepted language capability floor.
-pub const ACCEPTED_LANGUAGE_CAPABILITY_SET_VERSION: u32 = 7;
+pub const ACCEPTED_LANGUAGE_CAPABILITY_SET_VERSION: u32 = 8;
 
 /// Version of exact detector precedence and content-matching semantics.
 pub const LANGUAGE_DETECTION_POLICY_VERSION: u32 = 1;
@@ -69,6 +69,13 @@ pub const ACCEPTED_LANGUAGE_CAPABILITY_SET_V6_DIGEST: &str =
 /// binding ProjectAtlas-owned parser provenance to the 0.4.4 runtime.
 pub const ACCEPTED_LANGUAGE_CAPABILITY_SET_V7_DIGEST: &str =
     "50fcac887dffecc27f1b7d365ff5da991f2a86dc15e0474ef5bcc339c58bfd60";
+
+/// Historical acceptance seal for capability-set version 8.
+///
+/// Version 8 adds deterministic `QuickScript` detection, structural metadata
+/// symbols, and name-based `QuickFunction` call resolution.
+pub const ACCEPTED_LANGUAGE_CAPABILITY_SET_V8_DIGEST: &str =
+    "51de0a31664cb8fbbf9d8c24ff02db54febb0497233f9bd543f3d037e3a98f25";
 
 /// Maximum content prefix inspected by the bounded content/dialect detector.
 pub const LANGUAGE_CONTENT_DETECTION_MAX_BYTES: usize = 512;
@@ -308,6 +315,8 @@ pub enum SymbolParserOwner {
     Vue,
     /// `ProjectAtlas` `PowerShell` extraction.
     PowerShell,
+    /// `ProjectAtlas` `QuickScript` metadata and `CALL` extraction.
+    QuickScript,
     /// Conservative `ProjectAtlas` fallback extraction.
     Fallback,
     /// No definition or relationship extractor is available.
@@ -326,6 +335,8 @@ pub enum SemanticProviderOwner {
     Python,
     /// Cargo package and dependency identities.
     Cargo,
+    /// `QuickScript` `QuickFunction` declarations and `CALL` targets.
+    QuickScript,
     /// No independently validated project-wide semantic provider is available.
     Unavailable,
 }
@@ -339,6 +350,7 @@ impl SemanticProviderOwner {
             Self::EcmaScript => "ecma-script",
             Self::Python => "python",
             Self::Cargo => "cargo",
+            Self::QuickScript => "quickscript",
             Self::Unavailable => "unavailable",
         }
     }
@@ -355,6 +367,7 @@ impl SemanticProviderOwner {
             Self::EcmaScript => Some("ecmascript"),
             Self::Python => Some("python"),
             Self::Cargo => Some("cargo"),
+            Self::QuickScript => Some("quickscript"),
             Self::Unavailable => None,
         }
     }
@@ -900,6 +913,7 @@ define_language_registry! {
         "scala" => { aliases: [], parser_support: Fallback, symbol_parser: SymbolParserOwner::Fallback, structural_summary: None, support: SUPPORTED_FALLBACK, positive: "fixture.scala", negative: "fixture.scala.bak", provenance: CapabilityProvenance::ProjectAtlas },
         "shell" => { aliases: ["sh"], parser_support: Fallback, symbol_parser: SymbolParserOwner::Fallback, structural_summary: None, support: SUPPORTED_FALLBACK, positive: "fixture.sh", negative: "fixture.sh.bak", provenance: CapabilityProvenance::ProjectAtlas },
         "powershell" => { aliases: ["pwsh"], parser_support: Fallback, symbol_parser: SymbolParserOwner::PowerShell, structural_summary: Some(StructuralSummaryOwner::PowerShell), support: SUPPORTED_NATIVE, positive: "fixture.ps1", negative: "fixture.ps1.bak", provenance: CapabilityProvenance::ProjectAtlas },
+        "quickscript" => { aliases: [], parser_support: Structural, symbol_parser: SymbolParserOwner::QuickScript, structural_summary: None, support: SUPPORTED_SEMANTIC, semantic_provider: SemanticProviderOwner::QuickScript, positive: "fixture.vbi", negative: "fixture.vbi.bak", provenance: CapabilityProvenance::ProjectAtlas },
         "batch" => { aliases: [], parser_support: Fallback, symbol_parser: SymbolParserOwner::Fallback, structural_summary: None, support: SUPPORTED_FALLBACK, positive: "fixture.bat", negative: "fixture.bat.bak", provenance: CapabilityProvenance::ProjectAtlas },
         "r" => { aliases: ["rscript"], parser_support: Fallback, symbol_parser: SymbolParserOwner::Fallback, structural_summary: None, support: SUPPORTED_FALLBACK, positive: "fixture.r", negative: "fixture.r.bak", provenance: CapabilityProvenance::ProjectAtlas },
         "perl" => { aliases: [], parser_support: Fallback, symbol_parser: SymbolParserOwner::Fallback, structural_summary: None, support: SUPPORTED_FALLBACK, positive: "fixture.pl", negative: "fixture.pl.bak", provenance: CapabilityProvenance::ProjectAtlas },
@@ -1133,7 +1147,7 @@ define_language_registry! {
         ".py" => "python", ".pyw" => "python", ".js" => "javascript", ".jsx" => "javascript", ".ts" => "typescript", ".tsx" => "tsx", ".mjs" => "javascript", ".cjs" => "javascript", ".d.ts" => "typescript", ".java" => "java", ".c" => "c", ".cpp" => "cpp", ".h" => "h", ".hpp" => "hpp", ".cxx" => "cpp", ".cc" => "cpp", ".hxx" => "hpp", ".hh" => "hpp", ".cs" => "csharp", ".go" => "go", ".m" => "objective-c", ".mm" => "objective-c", ".rb" => "ruby", ".php" => "php", ".swift" => "swift", ".kt" => "kotlin", ".kts" => "kotlin", ".rs" => "rust", ".scala" => "scala", ".sh" => "shell", ".bash" => "shell", ".zsh" => "shell", ".ps1" => "powershell", ".psm1" => "powershell", ".psd1" => "powershell", ".bat" => "batch", ".cmd" => "batch", ".r" => "r", ".R" => "r", ".pl" => "perl", ".pm" => "perl", ".lua" => "lua", ".dart" => "dart", ".hs" => "haskell", ".ml" => "ocaml", ".mli" => "ocaml", ".fs" => "fsharp", ".fsx" => "fsharp", ".clj" => "clojure", ".cljs" => "clojure", ".vim" => "vim", ".zig" => "zig", ".zon" => "zig", ".html" => "html", ".htm" => "html", ".css" => "css", ".scss" => "css", ".sass" => "css", ".less" => "css", ".stylus" => "css", ".styl" => "css", ".md" => "markdown", ".mdx" => "markdown", ".json" => "json", ".jsonc" => "json", ".xml" => "xml", ".yml" => "yaml", ".yaml" => "yaml", ".toml" => "toml", ".toon" => "toon", ".txt" => "text", ".ini" => "config", ".cfg" => "config", ".conf" => "config", ".vue" => "vue", ".svelte" => "svelte", ".astro" => "astro", ".jsp" => "jsp", ".jspx" => "jsp", ".jspf" => "jsp", ".tag" => "jsp-tag", ".tagx" => "jsp-tag", ".gsp" => "gsp", ".properties" => "config", ".gradle" => "groovy", ".groovy" => "groovy", ".proto" => "protobuf", ".hbs" => "handlebars", ".handlebars" => "handlebars", ".ejs" => "ejs", ".pug" => "pug", ".ftl" => "freemarker", ".mustache" => "mustache", ".liquid" => "liquid", ".erb" => "erb", ".sql" => "sql", ".ddl" => "sql", ".dml" => "sql", ".mysql" => "sql", ".postgresql" => "sql", ".psql" => "sql", ".sqlite" => "sql", ".mssql" => "sql", ".oracle" => "sql", ".ora" => "sql", ".db2" => "sql", ".proc" => "sql", ".procedure" => "sql", ".func" => "sql", ".function" => "sql", ".view" => "sql", ".trigger" => "sql", ".index" => "sql", ".migration" => "sql", ".seed" => "sql", ".fixture" => "sql", ".schema" => "sql", ".cql" => "sql", ".cypher" => "sql", ".sparql" => "sql", ".gql" => "graphql", ".liquibase" => "sql", ".flyway" => "sql"
     }
     additional_extensions {
-        ".env" => "config", ".gitignore" => "config", ".dockerignore" => "config", ".editorconfig" => "config"
+        ".env" => "config", ".gitignore" => "config", ".dockerignore" => "config", ".editorconfig" => "config", ".vbi" => "quickscript", ".vi" => "quickscript"
     }
     content_interpreters {
         "python" => { language: "python", version_suffix: true },
@@ -1196,6 +1210,7 @@ pub fn tree_sitter_grammar(language: &str) -> Option<TreeSitterGrammar> {
         SymbolParserOwner::CargoManifest
         | SymbolParserOwner::Vue
         | SymbolParserOwner::PowerShell
+        | SymbolParserOwner::QuickScript
         | SymbolParserOwner::Fallback
         | SymbolParserOwner::Unavailable => None,
     }
@@ -1682,6 +1697,7 @@ fn symbol_parser_label(owner: SymbolParserOwner) -> String {
         SymbolParserOwner::CargoManifest => "projectatlas:cargo-manifest".to_string(),
         SymbolParserOwner::Vue => "projectatlas:vue".to_string(),
         SymbolParserOwner::PowerShell => "projectatlas:powershell".to_string(),
+        SymbolParserOwner::QuickScript => "projectatlas:quickscript".to_string(),
         SymbolParserOwner::Fallback => "projectatlas:fallback".to_string(),
         SymbolParserOwner::Unavailable => "unavailable".to_string(),
     }
@@ -1981,7 +1997,8 @@ pub fn validate_language_registry() -> Result<(), LanguageRegistryError> {
                 SymbolParserOwner::TreeSitter(_)
                 | SymbolParserOwner::CargoManifest
                 | SymbolParserOwner::Vue
-                | SymbolParserOwner::PowerShell,
+                | SymbolParserOwner::PowerShell
+                | SymbolParserOwner::QuickScript,
             ) => {}
             (support, owner) => {
                 return Err(LanguageRegistryError::new(format!(
@@ -1997,7 +2014,8 @@ pub fn validate_language_registry() -> Result<(), LanguageRegistryError> {
                 SemanticProviderOwner::Rust
                 | SemanticProviderOwner::EcmaScript
                 | SemanticProviderOwner::Python
-                | SemanticProviderOwner::Cargo,
+                | SemanticProviderOwner::Cargo
+                | SemanticProviderOwner::QuickScript,
             ) => {}
             (support, owner) => {
                 return Err(LanguageRegistryError::new(format!(
@@ -2100,6 +2118,7 @@ pub fn validate_language_registry() -> Result<(), LanguageRegistryError> {
         5 => ACCEPTED_LANGUAGE_CAPABILITY_SET_V5_DIGEST,
         6 => ACCEPTED_LANGUAGE_CAPABILITY_SET_V6_DIGEST,
         7 => ACCEPTED_LANGUAGE_CAPABILITY_SET_V7_DIGEST,
+        8 => ACCEPTED_LANGUAGE_CAPABILITY_SET_V8_DIGEST,
         version => {
             return Err(LanguageRegistryError::new(format!(
                 "accepted language capability-set version {version} lacks a historical digest seal"
@@ -2530,6 +2549,17 @@ mod tests {
         assert_eq!(detect_language(Some(".ini")).as_deref(), Some("config"));
         assert_eq!(detect_language(Some(".liquibase")).as_deref(), Some("sql"));
         assert_eq!(detect_language(Some(".toon")).as_deref(), Some("toon"));
+    }
+
+    #[test]
+    fn detects_quickscript_extensions_without_filename_conventions() {
+        for path in ["scripts/normalizer.vbi", "scripts/window-event.vi"] {
+            assert_eq!(
+                detect_language_for_path(path, None).as_deref(),
+                Some("quickscript"),
+                "QuickScript detection depended on a filename convention for {path}"
+            );
+        }
     }
 
     #[test]

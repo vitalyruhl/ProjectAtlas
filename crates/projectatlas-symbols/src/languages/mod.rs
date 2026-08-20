@@ -4,6 +4,7 @@ mod c_family;
 mod gradle;
 mod kotlin;
 mod objective_c;
+pub(crate) mod quickscript;
 mod zig;
 
 use projectatlas_core::symbols::{RelationKind, SymbolGraph, SymbolKind};

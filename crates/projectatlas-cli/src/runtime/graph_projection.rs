@@ -2452,6 +2452,7 @@ fn explicit_external_selector(
         (
             Some(
                 SemanticProviderOwner::Python
+                | SemanticProviderOwner::QuickScript
                 | SemanticProviderOwner::Unavailable
                 | SemanticProviderOwner::Cargo
                 | SemanticProviderOwner::EcmaScript,

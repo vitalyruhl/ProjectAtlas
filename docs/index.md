@@ -13,6 +13,7 @@ For normal MCP work, call one compact `atlas_session_brief`, follow its returned
 - README is the primary product and release overview.
 - GitHub Pages publishes generated Cargo API documentation and the generated Language & Ecosystem Support catalog at `https://styler-ai.github.io/ProjectAtlas/`.
 - Markdown files in `docs/` carry workflow, configuration, architecture, and benchmark details.
+- [QuickScript integration](quickscript-integration.md) defines the bounded `.vbi`/`.vi` indexing contract and its language-server boundary.
 - Design references live in `docs/design/`, including Ani's PNG/SVG mascot assets and the Ratatui token impact dashboard target.
 
 After every merged or closed PR that changes installation, CLI behavior, MCP behavior, release process, public API,

@@ -17,7 +17,7 @@ use std::fmt;
 /// Maximum canonical keys emitted for one source, symbol, or relation fact.
 pub const MAX_RESOLUTION_KEYS_PER_FACT: usize = 64;
 /// Version of the currently implemented semantic relation-resolution contract.
-pub const SEMANTIC_RESOLUTION_CONTRACT_VERSION: u32 = 3;
+pub const SEMANTIC_RESOLUTION_CONTRACT_VERSION: u32 = 4;
 
 /// Return a deterministic digest of the live semantic resolution-key contract.
 ///
@@ -949,7 +949,7 @@ mod tests {
         const PRE_MODULE_CALLBACK_DIGEST: &str =
             "487625adf2f9ec76f98034d4ef5667e707960b6b8afd280b213021cb64a0f10f";
         let first = semantic_resolution_contract_digest();
-        assert_eq!(SEMANTIC_RESOLUTION_CONTRACT_VERSION, 3);
+        assert_eq!(SEMANTIC_RESOLUTION_CONTRACT_VERSION, 4);
         assert_eq!(first.len(), 64);
         assert!(first.bytes().all(|byte| byte.is_ascii_hexdigit()));
         assert_eq!(first, semantic_resolution_contract_digest());
@@ -2011,6 +2011,30 @@ mod tests {
             "excessive relation-key fan-out was not rejected",
         )?;
         Ok(())
+    }
+
+    #[test]
+    fn quickscript_calls_share_unique_quickfunction_resolution_keys() -> Result<(), Box<dyn Error>>
+    {
+        let target = extract_symbol_graph(
+            "scripts/uri-normalizer.vbi",
+            Some("quickscript"),
+            "{>\n@ScriptType QuickFunction\n@Name NormalizeWorkspaceUri\n{<}\n",
+        );
+        let caller = extract_symbol_graph(
+            "scripts/startup.vi",
+            Some("quickscript"),
+            "{>\n@ScriptType Application\n@Name ApplicationStartup\n{<}\nCALL NormalizeWorkspaceUri();\n",
+        );
+
+        assert_alias_resolution(
+            project_id(10)?,
+            None,
+            &target,
+            "NormalizeWorkspaceUri",
+            &caller,
+            &["NormalizeWorkspaceUri"],
+        )
     }
 
     #[test]

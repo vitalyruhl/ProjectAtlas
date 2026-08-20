@@ -2,11 +2,11 @@
 
 This document is generated from the versioned Rust language capability registry. Do not edit the capability table or totals by hand. Canonical rows count once; aliases and extensions never increase a capability total.
 
-Registry version: `3`. Accepted capability-set version: `7`. Detection policy version: `1`. Registry digest: `50fcac887dffecc27f1b7d365ff5da991f2a86dc15e0474ef5bcc339c58bfd60`. Accepted-set digest: `50fcac887dffecc27f1b7d365ff5da991f2a86dc15e0474ef5bcc339c58bfd60`. Semantic-provider digest: `b26c4aa768ebe3bb185d5929350d2f41c6b1b2f93630080248dec7eb6ec00e82`.
+Registry version: `3`. Accepted capability-set version: `8`. Detection policy version: `1`. Registry digest: `51de0a31664cb8fbbf9d8c24ff02db54febb0497233f9bd543f3d037e3a98f25`. Accepted-set digest: `51de0a31664cb8fbbf9d8c24ff02db54febb0497233f9bd543f3d037e3a98f25`. Semantic-provider digest: `b82d05831dd4446951a4ecbe2d71d30ac05ce4a266d286721ffcef4e993af323`.
 
 Optional catalog input: `tree-sitter-language-pack@1.13.2` revision `6258abac30304283763a0d2dc8a48cb87fbcf438` under `MIT` metadata license. This catalog identity is not a grammar-license or runtime-support claim.
 
-The registry contains **271** canonical rows: **63** default-core rows and **208** optional-pack candidates. Detection is supported for 271 rows. Parsing is supported for 30, fallback for 241, and unavailable for 0. Symbols are supported for 20, fallback for 241, and unavailable for 10. Semantic resolution and benchmark coverage are reported independently.
+The registry contains **272** canonical rows: **64** default-core rows and **208** optional-pack candidates. Detection is supported for 272 rows. Parsing is supported for 31, fallback for 241, and unavailable for 0. Symbols are supported for 21, fallback for 241, and unavailable for 10. Semantic resolution and benchmark coverage are reported independently.
 
 Rows marked `broad-parser` are detected and, when explicitly admitted to the scan policy, remain usable through the conservative default-core fallback while the optional pack is absent. Catalog recognition alone does not add these extensions to the default scan surface. The pinned catalog is provenance for detection metadata only. A row becomes grammar-backed parsed support only after its exact grammar binary, subtree license, ABI/export, fixtures, and every accepted optional-pack target pass the separate acceptance gates. The v0.4 optional-pack targets are Linux x86-64 and Windows x86-64; macOS keeps the full built-in surface and reports `unsupported_containment` for optional-pack activation. Built-in owners always retain precedence.
 
@@ -67,6 +67,7 @@ Broad candidate rows are admitted only when the pinned catalog supplies a stable
 | `scala` | — | `.scala` | projectatlas:fallback | fallback | fallback | unavailable | — | unavailable | — | `projectatlas@0.4.4` | `MIT` |
 | `shell` | `sh` | `.sh`, `.bash`, `.zsh`, shebang `sh`, shebang `bash`, shebang `dash`, shebang `ash`, shebang `zsh`, shebang `ksh`, shebang `mksh`, shebang `fish` | projectatlas:fallback | fallback | fallback | unavailable | — | unavailable | — | `projectatlas@0.4.4` | `MIT` |
 | `powershell` | `pwsh` | `.ps1`, `.psm1`, `.psd1`, shebang `powershell`, shebang `pwsh` | projectatlas:powershell | supported | supported | unavailable | — | unavailable | — | `projectatlas@0.4.4` | `MIT` |
+| `quickscript` | — | `.vbi`, `.vi` | projectatlas:quickscript | supported | supported | supported (quickscript) | — | unavailable | — | `projectatlas@0.4.4` | `MIT` |
 | `batch` | — | `.bat`, `.cmd` | projectatlas:fallback | fallback | fallback | unavailable | — | unavailable | — | `projectatlas@0.4.4` | `MIT` |
 | `r` | `rscript` | `.r`, `.R`, shebang `rscript` | projectatlas:fallback | fallback | fallback | unavailable | — | unavailable | — | `projectatlas@0.4.4` | `MIT` |
 | `perl` | — | `.pl`, `.pm`, shebang `perl` | projectatlas:fallback | fallback | fallback | unavailable | — | unavailable | — | `projectatlas@0.4.4` | `MIT` |
@@ -288,7 +289,7 @@ Broad candidate rows are admitted only when the pinned catalog supplies a stable
 
 ## Language & Ecosystem Support
 
-Complete-support schema version: `1`. Ecosystem catalog version: `1`. Catalog digest: `934259103c396eb3e3ea357b1dc407caea16ec99bdded2da4f435d79837288cd`.
+Complete-support schema version: `1`. Ecosystem catalog version: `1`. Catalog digest: `fa1144abeaecce72187e16cdfec4b7cdf96c8e02fd82ac8745fdcdd2429ff0aa`.
 
 `Complete` means conformance to the fixed ProjectAtlas navigation contract, not compiler, build-system, runtime, or whole-language completeness. Final v0.4 MCP navigation revalidation retained every runtime candidate at its achieved detected/parsed/symbol/semantic/benchmarked tier: none has the complete schema-bound capability and agent-navigation evidence required for promotion.
 

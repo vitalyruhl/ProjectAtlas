@@ -4,7 +4,7 @@ adapter_precedence_disposition: intentional-correction
 adapter_precedence_rationale: "A supplied canonical language owns symbol routing; exact path inference applies only when language is absent."
 extension_normalization_disposition: intentional-correction
 extension_normalization_rationale: "Declared compound extensions match ASCII case-insensitively before ordinary extension fallback."
-language_pipelines[63]{language,support,summary_adapter,symbol_adapter}:
+language_pipelines[64]{language,support,summary_adapter,symbol_adapter}:
   "rust","native","none","tree-sitter"
   "rust-build-script","native","none","tree-sitter"
   "python","native","none","tree-sitter"
@@ -58,6 +58,7 @@ language_pipelines[63]{language,support,summary_adapter,symbol_adapter}:
   "scala","fallback","none","fallback"
   "shell","fallback","none","fallback"
   "powershell","fallback","powershell","powershell-structural"
+  "quickscript","structural","none","quickscript-structural"
   "batch","fallback","none","fallback"
   "r","fallback","none","fallback"
   "perl","fallback","none","fallback"
